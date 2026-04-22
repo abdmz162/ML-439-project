@@ -92,7 +92,7 @@ plt.close()
 plt.figure()
 sns.countplot(data=dev_df, x='embarked', hue='survived')
 plt.title("Embarked vs Survival")
-plt.savefig("output/plots/non-illustrative/embarked_vs_survival.png")
+plt.savefig("output/plots/illustrative/embarked_vs_survival.png")
 plt.close()
 
 # 4. Class vs survival
@@ -120,6 +120,7 @@ print("✔ output/plots/*.png")
 # =========================
 #Waleed=>parch_distribution, sibsp_distribution, cabin_distribution 
 #Muiz=> passengerid_vs_survival, ticket_frequency 
+#Both=>fare_vs_count
 
 # 1. Parch vs Count (non-illustrative)
 plt.figure()
@@ -187,5 +188,28 @@ plt.xticks(rotation=45)
 plt.tight_layout()
 plt.savefig("output/plots/non-illustrative/ticket_frequency.png")
 plt.close()
+
+#6. Count vs Fare (dot-based frequency plot)
+fare_counts = dev_df['fare'].value_counts().reset_index()
+fare_counts.columns = ['fare', 'count']
+
+plt.figure(figsize=(10, 4))
+
+plt.scatter(
+    fare_counts['fare'],
+    fare_counts['count'],
+    alpha=0.6,
+    s=20
+)
+
+plt.title("Fare vs Count (Dot Plot)")
+plt.xlabel("Fare")
+plt.ylabel("Number of Passengers")
+
+plt.tight_layout()
+
+plt.savefig("output/plots/non-illustrative/fare_vs_count.png", dpi=300)
+plt.close()
+
 
 print("Saved extra (non-used) figures")
