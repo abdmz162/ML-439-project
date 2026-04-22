@@ -13,7 +13,7 @@ print("Loaded dataset:", df.shape)
 
 
 # =========================
-# 2. STRATIFIED SPLIT (NO SKLEARN)
+# 2. STRATIFIED SPLIT
 # =========================
 target = 'survived'
 
@@ -71,8 +71,8 @@ with open("output/data/basic_stats.txt", "w") as f:
 # =========================
 # 6. VISUAL EXPLORATION
 # =========================
-#MUIZ=>survival_distribution, age_distribution, survival_by_sex
-#Waleed
+#MUIZ=>survival_distribution, survival_by_sex, age_distribution
+#WALEED=>survival_by_class,survival_vs_age
 
 # 1. Survival distribution
 plt.figure()
@@ -81,18 +81,18 @@ plt.title("Survival Distribution")
 plt.savefig("output/plots/illustrative/survival_distribution.png")
 plt.close()
 
-# 2. Age distribution
-plt.figure()
-sns.histplot(dev_df['age'].dropna(), bins=30, kde=True)
-plt.title("Age Distribution")
-plt.savefig("output/plots/illustrative/age_distribution.png")
-plt.close()
-
-# 3. Sex vs survival
+# 2. Sex vs survival
 plt.figure()
 sns.countplot(data=dev_df, x='sex', hue='survived')
 plt.title("Survival by Sex")
 plt.savefig("output/plots/illustrative/survival_by_sex.png")
+plt.close()
+
+# 3. Embarked vs Survival (weak signal) VERIFIED
+plt.figure()
+sns.countplot(data=dev_df, x='embarked', hue='survived')
+plt.title("Embarked vs Survival")
+plt.savefig("output/plots/non-illustrative/embarked_vs_survival.png")
 plt.close()
 
 # 4. Class vs survival
@@ -102,65 +102,8 @@ plt.title("Survival by Class")
 plt.savefig("output/plots/illustrative/survival_by_class.png")
 plt.close()
 
-
-
-#------------------------------------------------------------------#
-# Count vs Fare (dot-based frequency plot)
-fare_counts = dev_df['fare'].value_counts().reset_index()
-fare_counts.columns = ['fare', 'count']
-
-plt.figure(figsize=(10, 4))
-
-plt.scatter(
-    fare_counts['fare'],
-    fare_counts['count'],
-    alpha=0.6,
-    s=20
-)
-
-plt.title("Fare vs Count (Dot Plot)")
-plt.xlabel("Fare")
-plt.ylabel("Number of Passengers")
-
-plt.tight_layout()
-
-plt.savefig("output/plots/illustrative/fare_vs_count.png", dpi=300)
-plt.close()
-
-# Count vs Fare
-fare_counts = dev_df['fare'].value_counts().reset_index()
-fare_counts.columns = ['fare', 'count']
-
-# Sort for proper curve
-fare_counts = fare_counts.sort_values('fare')
-
-plt.figure(figsize=(10, 4))
-
-# Dots
-plt.scatter(
-    fare_counts['fare'],
-    fare_counts['count'],
-    alpha=0.6,
-    s=20
-)
-
-# Curve (connecting actual counts, not smoothed)
-plt.plot(
-    fare_counts['fare'],
-    fare_counts['count'],
-    linewidth=2
-)
-
-plt.title("Fare vs Count (Dot + Curve Plot)")
-plt.xlabel("Fare")
-plt.ylabel("Number of Passengers")
-
-plt.tight_layout()
-
-plt.savefig("output/plots/illustrative/fare_vs_count2.png", dpi=300)
-plt.close()
-
-print("Saved all plots ✔")
+# 5. Age vs survival
+#--code here--#
 
 
 # =========================
@@ -175,12 +118,38 @@ print("✔ output/plots/*.png")
 # =========================
 # EXTRA FIGURES (NOT USED IN FINAL ANALYSIS)
 # =========================
-#Muiz->Ticket Frequency / Embarked
-#Both->Passengerid vs Survival
-#Waleed->
+#Waleed=>parch_distribution, sibsp_distribution, cabin_distribution 
+#Muiz=> passengerid_vs_survival, ticket_frequency 
 
+# 1. Parch vs Count (non-illustrative)
+plt.figure()
 
-# 1. Cabin feature (too sparse / many missing values) MWA
+dev_df['parch'].value_counts().sort_index().plot(kind='bar')
+
+plt.title("Parch vs Count (Non-informative Distribution)")
+plt.xlabel("Number of Parents/Children aboard (Parch)")
+plt.ylabel("Count of Passengers")
+
+plt.tight_layout()
+
+plt.savefig("output/plots/non-illustrative/parch_distribution.png", dpi=300)
+plt.close()
+
+# 2. SibSp vs Count (non-illustrative)
+plt.figure()
+
+dev_df['sibsp'].value_counts().sort_index().plot(kind='bar')
+
+plt.title("SibSp vs Count (Non-informative Distribution)")
+plt.xlabel("Number of Siblings/Spouses aboard (SibSp)")
+plt.ylabel("Count of Passengers")
+
+plt.tight_layout()
+
+plt.savefig("output/plots/non-illustrative/sibsp_distribution.png", dpi=300)
+plt.close()
+
+# 3. Cabin feature (too sparse / many missing values) MWA
 if 'cabin' in dev_df.columns:
     plt.figure()
     dev_df['cabin'].fillna('Unknown').value_counts().head(15).plot(kind='bar')
@@ -189,25 +158,6 @@ if 'cabin' in dev_df.columns:
     plt.tight_layout()
     plt.savefig("output/plots/non-illustrative/cabin_distribution.png")
     plt.close()
-
-
-# 2. Ticket frequency (high cardinality, noisy)
-plt.figure()
-dev_df['ticket'].value_counts().head(20).plot(kind='bar')
-plt.title("Ticket Frequency (Top 20)")
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.savefig("output/plots/non-illustrative/ticket_frequency.png")
-plt.close()
-
-
-# 3. Embarked vs Survival (weak signal) VERIFIED
-plt.figure()
-sns.countplot(data=dev_df, x='embarked', hue='survived')
-plt.title("Embarked vs Survival")
-plt.savefig("output/plots/non-illustrative/embarked_vs_survival.png")
-plt.close()
-
 
 # 4. Passenger ID vs Survival (binary scatter plot)
 plt.figure(figsize=(10, 4))
@@ -229,32 +179,13 @@ plt.tight_layout()
 plt.savefig("output/plots/non-illustrative/passengerid_vs_survival.png", dpi=300)
 plt.close()
 
-# 5. SibSp vs Count (non-illustrative)
+# 5. Ticket frequency (high cardinality, noisy)
 plt.figure()
-
-dev_df['sibsp'].value_counts().sort_index().plot(kind='bar')
-
-plt.title("SibSp vs Count (Non-informative Distribution)")
-plt.xlabel("Number of Siblings/Spouses aboard (SibSp)")
-plt.ylabel("Count of Passengers")
-
+dev_df['ticket'].value_counts().head(20).plot(kind='bar')
+plt.title("Ticket Frequency (Top 20)")
+plt.xticks(rotation=45)
 plt.tight_layout()
-
-plt.savefig("output/plots/non-illustrative/sibsp_distribution.png", dpi=300)
-plt.close()
-
-# 6. Parch vs Count (non-illustrative)
-plt.figure()
-
-dev_df['parch'].value_counts().sort_index().plot(kind='bar')
-
-plt.title("Parch vs Count (Non-informative Distribution)")
-plt.xlabel("Number of Parents/Children aboard (Parch)")
-plt.ylabel("Count of Passengers")
-
-plt.tight_layout()
-
-plt.savefig("output/plots/non-illustrative/parch_distribution.png", dpi=300)
+plt.savefig("output/plots/non-illustrative/ticket_frequency.png")
 plt.close()
 
 print("Saved extra (non-used) figures")
