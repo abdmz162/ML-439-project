@@ -76,28 +76,46 @@ with open("output/data/basic_stats.txt", "w") as f:
 
 # 1. Survival distribution
 plt.figure()
-sns.countplot(data=dev_df, x='survived')
+
+ax=sns.countplot(data=dev_df, x='survived')
+
+for container in ax.containers:
+    ax.bar_label(container)
+
 plt.title("Survival Distribution")
 plt.savefig("output/plots/illustrative/survival_distribution.png")
 plt.close()
 
 # 2. Sex vs survival
 plt.figure()
-sns.countplot(data=dev_df, x='sex', hue='survived')
+
+ax=sns.countplot(data=dev_df, x='sex', hue='survived')
+
+for container in ax.containers:
+    ax.bar_label(container)
+    
 plt.title("Survival by Sex")
 plt.savefig("output/plots/illustrative/survival_by_sex.png")
 plt.close()
 
 # 3. Embarked vs Survival (weak signal) VERIFIED
 plt.figure()
-sns.countplot(data=dev_df, x='embarked', hue='survived')
+ax=sns.countplot(data=dev_df, x='embarked', hue='survived')
+
+for container in ax.containers:
+    ax.bar_label(container)
+    
 plt.title("Embarked vs Survival")
 plt.savefig("output/plots/illustrative/embarked_vs_survival.png")
 plt.close()
 
 # 4. Class vs survival
 plt.figure()
-sns.countplot(data=dev_df, x='pclass', hue='survived')
+ax=sns.countplot(data=dev_df, x='pclass', hue='survived')
+
+for container in ax.containers:
+    ax.bar_label(container)
+    
 plt.title("Survival by Class")
 plt.savefig("output/plots/illustrative/survival_by_class.png")
 plt.close()
