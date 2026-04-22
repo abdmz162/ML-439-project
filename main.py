@@ -187,7 +187,7 @@ print("✔ output/data/basic_stats.txt")
 print("✔ output/plots/*.png")
 
 # =========================
-# EXTRA FIGURES (NOT USED IN FINAL ANALYSIS)
+# NON ILLUSTRATIVE FIGURES (NOT USED IN FINAL ANALYSIS)
 # =========================
 #Waleed=>parch_distribution, sibsp_distribution, cabin_distribution 
 #Muiz=> passengerid_vs_survival, ticket_frequency 
@@ -260,6 +260,7 @@ plt.tight_layout()
 plt.savefig("output/plots/non-illustrative/ticket_frequency.png")
 plt.close()
 
+#EXTRA SCATTER PLOT
 #6. Count vs Fare (dot-based frequency plot)
 fare_counts = dev_df['fare'].value_counts().reset_index()
 fare_counts.columns = ['fare', 'count']
