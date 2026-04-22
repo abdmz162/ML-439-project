@@ -1,6 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 
 # =========================
@@ -121,7 +122,59 @@ plt.savefig("output/plots/illustrative/survival_by_class.png")
 plt.close()
 
 # 5. Age vs survival
-#--code here--#
+
+data = dev_df.dropna(subset=['age'])
+
+# Create age bins (you can adjust bin size)
+bins = np.arange(0, 85, 5)  # 0–80 in steps of 5
+data['age_bin'] = pd.cut(data['age'], bins)
+
+# Count for each survival class
+age_survival = data.groupby(['age_bin', 'survived']).size().unstack(fill_value=0)
+
+# Plot
+plt.figure(figsize=(12, 5))
+
+# Bars
+plt.bar(age_survival.index.astype(str), age_survival[1], color='blue', label='Survived')
+plt.bar(age_survival.index.astype(str), age_survival[0],
+        bottom=age_survival[1], color='red', label='Did Not Survive')
+
+plt.xticks(rotation=45)
+plt.xlabel("Age (years)")
+plt.ylabel("Count")
+plt.title("Age vs Survival (Count)")
+
+plt.legend()
+plt.tight_layout()
+
+plt.savefig("output/plots/illustrative/age_vs_survival.png", dpi=300)
+plt.close()
+
+print("Saved Age vs Survival ✔")
+
+# BOXPLOT
+plt.figure(figsize=(6, 5))
+
+sns.boxplot(
+    data=data,
+    x='survived',
+    y='age',
+    hue='survived',        
+    palette={0: 'red', 1: 'blue'},
+    legend=False            
+)
+
+plt.xticks([0, 1], ['Did Not Survive', 'Survived'])
+
+plt.xlabel("Survival Status")
+plt.ylabel("Age (years)")
+plt.title("Age BoxPlot by Survival")
+
+plt.tight_layout()
+
+plt.savefig("output/plots/illustrative/age_boxplot_by_survival.png", dpi=300)
+plt.close()
 
 
 # =========================
