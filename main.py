@@ -4,18 +4,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-# =========================
+# The initial work and part of the code was done by both 2023-EE-162 and 2023-EE-165 , while on the spcific parts , we have written the registration numbers .
+
 # 1. LOAD DATA
-# =========================
 df = pd.read_csv('titanic.csv')
 df.columns = df.columns.str.lower()
 
 print("Loaded dataset:", df.shape)
 
 
-# =========================
 # 2. STRATIFIED SPLIT
-# =========================
 target = 'survived'
 
 df_0 = df[df[target] == 0].sample(frac=1, random_state=42)
@@ -28,35 +26,27 @@ dev_df = pd.concat([df_0[:split_0], df_1[:split_1]]).sample(frac=1, random_state
 test_df = pd.concat([df_0[split_0:], df_1[split_1:]]).sample(frac=1, random_state=30)
 
 
-# =========================
 # 3. CREATE FOLDERS
-# =========================
 os.makedirs("output/data", exist_ok=True)
 os.makedirs("output/plots/illustrative", exist_ok=True)
 os.makedirs("output/plots/non-illustrative", exist_ok=True)
 
 
-# =========================
 # 4. SAVE DATASETS
-# =========================
 dev_df.to_csv("output/data/dev_df.csv", index=False)
 test_df.to_csv("output/data/test_df.csv", index=False)
 
 print("Saved dev/test datasets ✔")
 
 
-# =========================
 # 5. SAVE BASIC STATS
-# =========================
 with open("output/data/basic_stats.txt", "w") as f:
     f.write("=== DATASET SHAPES ===\n")
     f.write(f"Original: {df.shape}\n")
     f.write(f"Dev: {dev_df.shape}\n")
     f.write(f"Test: {test_df.shape}\n\n")
 
-    # =========================
     # BASIC STATISTICS (NUMERIC)
-    # =========================
 
     selected_cols = ['survived', 'age', 'sibsp', 'parch', 'fare']
     numeric_df = dev_df[selected_cols]
@@ -69,13 +59,14 @@ with open("output/data/basic_stats.txt", "w") as f:
     print("Saved stats ✔")
 
 
-# =========================
 # 6. VISUAL EXPLORATION
-# =========================
+
+# Illustrative Figures
 #MUIZ=>survival_distribution, survival_by_sex, age_distribution
 #WALEED=>survival_by_class,survival_vs_age
 
 # 1. Survival distribution
+# 2023-EE-162
 plt.figure()
 
 ax=sns.countplot(data=dev_df, x='survived')
@@ -88,6 +79,7 @@ plt.savefig("output/plots/illustrative/survival_distribution.png")
 plt.close()
 
 # 2. Sex vs survival
+# 2023-EE-162
 plt.figure()
 
 ax=sns.countplot(data=dev_df, x='sex', hue='survived')
@@ -100,6 +92,7 @@ plt.savefig("output/plots/illustrative/survival_by_sex.png")
 plt.close()
 
 # 3. Embarked vs Survival (weak signal) VERIFIED
+# 2023-EE-162
 plt.figure()
 ax=sns.countplot(data=dev_df, x='embarked', hue='survived')
 
@@ -111,6 +104,7 @@ plt.savefig("output/plots/illustrative/embarked_vs_survival.png")
 plt.close()
 
 # 4. Class vs survival
+# 2023-EE-165
 plt.figure()
 ax=sns.countplot(data=dev_df, x='pclass', hue='survived')
 
@@ -122,7 +116,7 @@ plt.savefig("output/plots/illustrative/survival_by_class.png")
 plt.close()
 
 # 5. Age vs survival
-
+# 2023-EE-165
 data = dev_df.dropna(subset=['age'])
 
 # Create age bins (you can adjust bin size)
@@ -186,14 +180,13 @@ print("✔ output/data/test_df.csv")
 print("✔ output/data/basic_stats.txt")
 print("✔ output/plots/*.png")
 
-# =========================
-# NON ILLUSTRATIVE FIGURES (NOT USED IN FINAL ANALYSIS)
-# =========================
+# NON ILLUSTRATIVE FIGURES 
 #Waleed=>parch_distribution, sibsp_distribution, cabin_distribution 
 #Muiz=> passengerid_vs_survival, ticket_frequency 
 #Both=>fare_vs_count
 
 # 1. Parch vs Count (non-illustrative)
+# 2023-EE-165
 plt.figure()
 
 dev_df['parch'].value_counts().sort_index().plot(kind='bar')
@@ -208,6 +201,7 @@ plt.savefig("output/plots/non-illustrative/parch_distribution.png", dpi=300)
 plt.close()
 
 # 2. SibSp vs Count (non-illustrative)
+# 2023-EE-165
 plt.figure()
 
 dev_df['sibsp'].value_counts().sort_index().plot(kind='bar')
@@ -221,7 +215,8 @@ plt.tight_layout()
 plt.savefig("output/plots/non-illustrative/sibsp_distribution.png", dpi=300)
 plt.close()
 
-# 3. Cabin feature (too sparse / many missing values) MWA
+# 3. Cabin feature (too sparse / many missing values) 
+# 2023-EE-165
 if 'cabin' in dev_df.columns:
     plt.figure()
     dev_df['cabin'].fillna('Unknown').value_counts().head(15).plot(kind='bar')
@@ -232,6 +227,7 @@ if 'cabin' in dev_df.columns:
     plt.close()
 
 # 4. Passenger ID vs Survival (binary scatter plot)
+# 2023-EE-162
 plt.figure(figsize=(10, 4))
 
 plt.scatter(
@@ -252,6 +248,7 @@ plt.savefig("output/plots/non-illustrative/passengerid_vs_survival.png", dpi=300
 plt.close()
 
 # 5. Ticket frequency (high cardinality, noisy)
+# 2023-EE-162
 plt.figure()
 dev_df['ticket'].value_counts().head(20).plot(kind='bar')
 plt.title("Ticket Frequency (Top 20)")
@@ -261,6 +258,7 @@ plt.savefig("output/plots/non-illustrative/ticket_frequency.png")
 plt.close()
 
 #EXTRA SCATTER PLOT
+# by both 2023-EE-162 and 2023-EE-165
 #6. Count vs Fare (dot-based frequency plot)
 fare_counts = dev_df['fare'].value_counts().reset_index()
 fare_counts.columns = ['fare', 'count']
