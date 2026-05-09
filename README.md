@@ -4,8 +4,8 @@ Machine Learning CEP Project
 
 ## Team Members
 
-- 2023-EE-162
-- 2023-EE-165
+- 2023-EE-162 (Abdul Muiz)
+- 2023-EE-165 (Muhammad Waleed Akram)
 
 ---
 
@@ -81,20 +81,7 @@ python main.py
 deactivate
 ```
 
----
 
-# Project Structure
-
-```text
-ML-439-project/
-│
-├── data/
-├── requirements.txt
-├── main.py
-└── README.md
-└── .gitignore
-
-```
 
 ---
 
@@ -103,6 +90,15 @@ ML-439-project/
 - Python 3.10 or above
 - pip
 - Virtual Environment (venv)
+
+---
+
+# Required Libraries (Also can find from requirements.txt file)
+
+- pandas
+- numpy
+- matplotlib
+- seaborn
 
 ---
 
